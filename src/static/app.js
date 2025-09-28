@@ -106,6 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const email = document.getElementById("email").value;
     const activity = document.getElementById("activity").value;
+    const submitBtn = signupForm.querySelector("button[type='submit']");
+
+    // Disable submit button to prevent duplicate submissions
+    submitBtn.disabled = true;
 
     try {
       const response = await fetch(
@@ -122,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.className = "success";
         signupForm.reset();
         // Refresh activities list and dropdown after successful signup
-        fetchActivities();
+        await fetchActivities(); // Ensure UI is updated before hiding message
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -139,6 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 
